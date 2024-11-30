@@ -4,15 +4,18 @@ import { FaChevronCircleRight } from "react-icons/fa";
 import UseCases from "../components/UseCases";
 
 const Dojo: React.FC = () => {
-  const [selectedSector, setSelectedSector] =
-    useState<string>("bg-second_blue");
+  const [selectedSector, setSelectedSector] = useState<string>("bg-blue");
   const sectorsRef = useRef<HTMLUListElement | null>(null); // Ref to the sectors container
   const [canScrollLeft, setCanScrollLeft] = useState<boolean>(false);
   const [canScrollRight, setCanScrollRight] = useState<boolean>(false);
 
-  const handleSelectedColor = (): void => {
-    if (selectedSector === "bg-second_blue") {
-      setSelectedSector("bg-blue");
+  const handleSelectedColor = (type: string): void => {
+    if (type === "toggle") {
+      if (selectedSector === "bg-blue") {
+        setSelectedSector("bg-second_blue");
+      } else {
+        setSelectedSector("bg-blue");
+      }
     } else {
       setSelectedSector("bg-second_blue");
     }
@@ -82,7 +85,7 @@ const Dojo: React.FC = () => {
             />
           </div>
           <button
-            onClick={handleSelectedColor}
+            onClick={() => handleSelectedColor("toggle")}
             className={`${selectedSector} cursor-pointer tracking-wide text-white font-semibold text-[14px] rounded-lg p-2`}
           >
             Optimize Use Case
@@ -106,7 +109,8 @@ const Dojo: React.FC = () => {
           {[...Array(15)].map((_, index) => (
             <li
               key={index}
-              className="p-3 pb-5 rounded-xl w-[164px] h-[75px] bg-light_blue border border-light-gray shrink-0"
+              className="p-3 pb-5 rounded-xl cursor-pointer w-[164px] h-[75px] bg-light_blue border border-light-gray shrink-0"
+              onClick={() => handleSelectedColor("sector")}
             >
               <h2 className="font-bold">Sector {index + 1}</h2>
               <p>Custom Name</p>
