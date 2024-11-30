@@ -340,17 +340,6 @@ const UseCasesFlow = () => {
           className="absolute inset-0"
           fitView
         >
-          <Controls
-            style={{
-              position: "absolute",
-              bottom: "8px",
-              left: "317px",
-              zIndex: 10,
-              padding: "8px",
-              borderRadius: "8px",
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-            }}
-          />
           <Background color="#aaa" gap={16} />
         </ReactFlow>
       </div>
@@ -361,10 +350,20 @@ const UseCasesFlow = () => {
 const UseCases = () => {
   return (
     <ReactFlowProvider>
+      <Controls
+        style={{
+          position: "absolute",
+          bottom: "-190px",
+          left: "657px",
+          zIndex: 100,
+          padding: "8px",
+          borderRadius: "8px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+        }}
+      />
       <UseCasesFlow />
     </ReactFlowProvider>
   );
 };
 
 export default UseCases;
-
