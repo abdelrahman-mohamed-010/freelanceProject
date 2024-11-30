@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -99,10 +99,28 @@ const UseCasesFlow = () => {
   const [showModal, setShowModal] = useState(false);
   const [useCases, setUseCases] = useState<UseCase[]>([]);
   const [showCases, setShowCases] = useState(false);
+  const [undoStack, setUndoStack] = useState<Edge[][]>([]); // Undo stack
+
+  // Keydown listener for Ctrl + Z
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key === "z") {
+        if (undoStack.length > 0) {
+          const lastEdges = undoStack[undoStack.length - 1];
+          setUndoStack((prevStack) => prevStack.slice(0, -1));
+          setEdges(lastEdges); // Restore edges to the last state
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [undoStack]);
 
   // Connection handler
   const onConnect = useCallback(
     (params: Edge | Connection) => {
+      setUndoStack((prevStack) => [...prevStack, edges]); // Save current edges to the stack
       setEdges((eds) =>
         addEdge(
           {
@@ -113,9 +131,8 @@ const UseCasesFlow = () => {
         )
       );
     },
-    [setEdges]
+    [edges, setEdges]
   );
-
   // Component click handlers
   const handleComponentClick = (id: number) => {
     setSelectedComponent((prev) => (prev === id ? null : id));
@@ -350,3 +367,4 @@ const UseCases = () => {
 };
 
 export default UseCases;
+
