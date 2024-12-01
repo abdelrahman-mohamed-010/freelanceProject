@@ -349,20 +349,22 @@ const UseCasesFlow = () => {
 
 const UseCases = () => {
   return (
-    <ReactFlowProvider>
-      <Controls
-        style={{
-          position: "absolute",
-          bottom: "-190px",
-          left: "657px",
-          zIndex: 100,
-          padding: "8px",
-          borderRadius: "8px",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-        }}
-      />
-      <UseCasesFlow />
-    </ReactFlowProvider>
+    <div className=" relative">
+      <ReactFlowProvider>
+        <Controls
+          style={{
+            position: "absolute",
+            bottom: "0",
+            left: "314px",
+            zIndex: 100,
+            padding: "8px",
+            borderRadius: "8px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          }}
+        />
+        <UseCasesFlow />
+      </ReactFlowProvider>
+    </div>
   );
 };
 
