@@ -16,11 +16,28 @@ import "reactflow/dist/style.css";
 import Modal from "./Modal";
 import ShowModal from "./ShowSavedCases";
 import { Box, ChevronDown, CirclePlus, CornerUpRight } from "lucide-react";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { setId } from "../redux/idSlice";
 
 // Custom node component with handles
 const UseCaseNode = ({ data }: { data: { label: string } }) => {
+  const dispatch = useAppDispatch();
+
+  const handleShowProperty = () => {
+    if (data.label === "Component A") {
+      dispatch(setId(1));
+    } else if (data.label === "Component B") {
+      dispatch(setId(2));
+    } else {
+      dispatch(setId(3));
+    }
+  };
+
   return (
-    <div className="bg-white p-4 border-2 border-blue-300 rounded-lg shadow-md w-48 relative">
+    <div
+      className="bg-white p-4 border-2 border-blue-300 rounded-lg shadow-md w-48 relative"
+      onClick={handleShowProperty}
+    >
       {/* Handles */}
       <Handle
         type="target"
@@ -101,6 +118,9 @@ const UseCasesFlow = () => {
   const [showCases, setShowCases] = useState(false);
   const [undoStack, setUndoStack] = useState<Edge[][]>([]); // Undo stack
 
+  const ChildComp = useAppSelector((state) => state.id.id);
+  const dispatch = useAppDispatch();
+
   // Keydown listener for Ctrl + Z
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -152,7 +172,13 @@ const UseCasesFlow = () => {
       position: { x: 500, y: 400 },
       draggable: true,
     };
-
+    if (letter === "A") {
+      dispatch(setId(1));
+    } else if (letter === "B") {
+      dispatch(setId(2));
+    } else {
+      dispatch(setId(3));
+    }
     setNodes((prevNodes) => [...prevNodes, newNode]);
   };
 
@@ -273,11 +299,11 @@ const UseCasesFlow = () => {
             })}
           </div>
         </div>
-
-        {ShowselectedChildComp !== null && (
+        {ChildComp !== 0 && ShowselectedChildComp !== null && (
           <div className="absolute right-0 w-[307px] overflow-scroll mt-3 mr-3 scrollbar-hide text-sm text-nowrap flex flex-col justify-between font-bold bg-white rounded-lg border border-light-gray p-3 pb-2 shadow-lg h-fit z-30">
             <h3 className="flex items-center gap-2 text-xl mb-5">
-              <Box /> Component {ShowselectedChildComp}
+              <Box /> Component
+              {ChildComp === 1 ? "A" : ChildComp === 2 ? "B" : "C"}
             </h3>
             {Array.from({ length: 4 }).map((_, index) => {
               const componentId = index + 1;
@@ -317,7 +343,6 @@ const UseCasesFlow = () => {
             })}
           </div>
         )}
-
         <div className="absolute bottom-7 right-2 z-10">
           <button
             onClick={handleSaveUseCase}
@@ -356,7 +381,7 @@ const UseCases = () => {
             position: "absolute",
             bottom: "0",
             left: "314px",
-            zIndex: 100,
+            zIndex: 20,
             padding: "8px",
             borderRadius: "8px",
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
